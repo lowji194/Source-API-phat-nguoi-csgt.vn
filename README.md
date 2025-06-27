@@ -156,6 +156,12 @@ Bạn có thể sử dụng `index.php` như một API trung gian để gọi đ
 GET http://yourdomain.com/index.php?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
 ```
 
+### DEMO ENDPOINT
+
+```
+https://github.com/lowji194/API-Phatnguoi-CSGT
+```
+
 ### ⚙️ Cấu hình PHP
 
 Đảm bảo PHP có thể chạy lệnh shell:
