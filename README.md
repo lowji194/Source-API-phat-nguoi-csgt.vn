@@ -175,3 +175,19 @@ disable_functions =
 ### 🔐 Ghi chú bảo mật:
 - **Luôn lọc dữ liệu đầu vào** tránh nguy cơ injection.
 - Không nên mở rộng quyền thực thi quá mức nếu chạy trên môi trường public.
+
+---
+
+## 📫 Liên hệ với tôi
+
+- 📞 **SĐT:** 0963 159 294
+- 🌐 **Website:** [lowji194.github.io](https://lowji194.github.io)
+- 📌 **Facebook:** [Lowji194](https://facebook.com/Lowji194)
+
+---
+
+## ☕ Nếu bạn thấy dự án này hữu ích, một ly cà phê từ bạn sẽ là động lực tuyệt vời để mình tiếp tục phát triển thêm!
+
+<p align="center">
+  <img src="https://pay.theloi.io.vn/QR.png?text=QR+Code" alt="Mời cà phê" width="240" />
+</p>
