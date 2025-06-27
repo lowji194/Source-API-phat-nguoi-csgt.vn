@@ -60,7 +60,7 @@ python main.py 30A12345 1 your_api_key_here
 
 ---
 
-### 2. Tích hợp API bằng Flask
+### 2. Tích hợp API bằng Flask (tuỳ chọn gợi ý)
 
 Mở rộng `main.py` để chạy như một API Flask đơn giản:
 
@@ -126,30 +126,6 @@ http://localhost:5000/tra-cuu?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
 
 Bạn có thể dùng `index.php` để triển khai API trung gian gọi `main.py` thông qua dòng lệnh (`exec`) và trả về kết quả JSON.
 
-### Ví dụ nội dung `index.php`:
-
-```php
-<?php
-header('Content-Type: application/json');
-
-// Lấy dữ liệu từ request GET
-$bienso = isset($_GET['bienso']) ? $_GET['bienso'] : '';
-$loaixe = isset($_GET['loaixe']) ? $_GET['loaixe'] : '';
-$apikey = isset($_GET['apicaptcha']) ? $_GET['apicaptcha'] : '';
-
-if (!$bienso || !$loaixe || !$apikey) {
-    echo json_encode(['error' => 'Thiếu tham số bienso, loaixe hoặc apicaptcha']);
-    exit;
-}
-
-// Gọi script Python
-$command = escapeshellcmd("python3 main.py $bienso $loaixe $apikey");
-$output = shell_exec($command);
-
-// Trả kết quả
-echo $output;
-?>
-```
 
 ### Gửi request:
 
