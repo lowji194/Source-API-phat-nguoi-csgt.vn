@@ -156,11 +156,7 @@ Bạn có thể sử dụng `index.php` như một API trung gian để gọi đ
 GET http://yourdomain.com/index.php?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
 ```
 
-### DEMO ENDPOINT
-
-```
-https://github.com/lowji194/API-Phatnguoi-CSGT
-```
+Demo endpoint: [Xem tại repository này](https://github.com/lowji194/Source-API-phat-nguoi-csgt.vn)
 
 ### ⚙️ Cấu hình PHP
 
