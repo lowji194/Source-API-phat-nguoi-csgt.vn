@@ -1,7 +1,8 @@
 
 # 🚦 Tra Cứu Vi Phạm Giao Thông Tự Động
 
-### Demo endpoint: [Xem tại repository này](https://github.com/lowji194/Source-API-phat-nguoi-csgt.vn)
+### Demo endpoint: [Repository: Source-API-phat-nguoi-csgt.vn](https://github.com/lowji194/Source-API-phat-nguoi-csgt.vn)
+### Source Python Bot Phạt nguội Telegram: [Repository: Bot-telegram-Tracuuphatnguoi](https://github.com/lowji194/Bot-telegram-Tracuuphatnguoi)
 
 ## 📁 Cấu trúc thư mục
 
