@@ -1,1 +1,201 @@
-# Source-API-ph-t-ngu-i-csgt.vn
+
+# 🚦 Tra Cứu Vi Phạm Giao Thông Tự Động
+
+## 📁 Cấu trúc thư mục
+
+```
+.
+├── config.py              # Cấu hình URL, header gửi request
+├── main.py                # Chạy tra cứu, sử dụng Flask hoặc CLI
+├── InvisCapcha.py         # Giải Captcha Invisible (Google reCAPTCHA)
+├── txtcaptcha.py          # Giải Captcha dạng ảnh bằng API OCR
+├── index.php              # (Không cần thiết để chạy Python, có thể là phần frontend)
+```
+
+---
+
+## ⚙️ Yêu cầu cài đặt
+
+Chạy file `main.py` để tự động kiểm tra và cài các thư viện:
+
+```bash
+python main.py
+```
+
+Hoặc cài thủ công:
+
+```bash
+pip install flask bs4 requests urllib3
+```
+
+---
+
+## 🧠 Chức năng chính
+
+- Giải Captcha dạng ảnh (text captcha)
+- Bypass Invisible reCAPTCHA
+- Gửi request tra cứu đến https://www.csgt.vn
+- Trả về dữ liệu JSON chứa thông tin vi phạm (nếu có)
+
+---
+
+## 🚀 Cách sử dụng
+
+### 1. Chạy bằng dòng lệnh
+
+```bash
+python main.py <bienso> <loaixe> <apikey_captcha>
+```
+
+**Tham số**:
+- `bienso`: Biển số xe cần tra cứu (ví dụ: `30A12345`)
+- `loaixe`: Loại xe (ví dụ: `1` cho ô tô, `2` cho xe máy)
+- `apikey_captcha`: API key dùng để giải Captcha
+
+**Ví dụ:**
+
+```bash
+python main.py 30A12345 1 your_api_key_here
+```
+
+---
+
+### 2. Tích hợp API bằng Flask
+
+Mở rộng `main.py` để chạy như một API Flask đơn giản:
+
+```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/tra-cuu', methods=['GET'])
+def tra_cuu():
+    bienso = request.args.get('bienso')
+    loaixe = request.args.get('loaixe')
+    apicaptcha = request.args.get('apicaptcha')
+    if not all([bienso, loaixe, apicaptcha]):
+        return {"error": "Thiếu tham số"}
+    return kiemtra_bienso(bienso, loaixe, apicaptcha)
+
+if __name__ == '__main__':
+    app.run(port=5000)
+```
+
+Truy cập:
+```
+http://localhost:5000/tra-cuu?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
+```
+
+---
+
+## 🔐 Giải Captcha
+
+- Dùng dịch vụ [autocaptcha.pro](https://autocaptcha.pro) hoặc [ocr.space](https://ocr.space/ocrapi) để giải captcha dạng ảnh.
+- Dùng Invisible reCAPTCHA bypass bằng `InvisCapcha.py`
+
+---
+
+## 📌 Ghi chú
+
+- Tối đa 5 lần thử lại nếu giải captcha sai.
+- Kết quả trả về gồm trạng thái (`success`, `failed`, `error`) và danh sách vi phạm nếu có.
+- Nếu không có vi phạm: `msg: "Không có vi phạm"`
+
+---
+
+## ✅ Ví dụ kết quả JSON
+
+```json
+{
+  "status": "success",
+  "msg": "Có vi phạm",
+  "data": [
+    {
+      "Biển kiểm soát": "30A12345",
+      "Thời gian vi phạm": "2023-05-12 14:45",
+      "Địa điểm vi phạm": "Cầu Giấy, Hà Nội"
+    }
+  ]
+}
+```
+
+---
+
+## 🌐 Sử dụng `index.php` làm API trung gian
+
+Bạn có thể dùng `index.php` để triển khai API trung gian gọi `main.py` thông qua dòng lệnh (`exec`) và trả về kết quả JSON.
+
+### Ví dụ nội dung `index.php`:
+
+```php
+<?php
+header('Content-Type: application/json');
+
+// Lấy dữ liệu từ request GET
+$bienso = isset($_GET['bienso']) ? $_GET['bienso'] : '';
+$loaixe = isset($_GET['loaixe']) ? $_GET['loaixe'] : '';
+$apikey = isset($_GET['apicaptcha']) ? $_GET['apicaptcha'] : '';
+
+if (!$bienso || !$loaixe || !$apikey) {
+    echo json_encode(['error' => 'Thiếu tham số bienso, loaixe hoặc apicaptcha']);
+    exit;
+}
+
+// Gọi script Python
+$command = escapeshellcmd("python3 main.py $bienso $loaixe $apikey");
+$output = shell_exec($command);
+
+// Trả kết quả
+echo $output;
+?>
+```
+
+### Gửi request:
+
+```
+GET http://yourdomain.com/index.php?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
+```
+
+### ⚠️ Lưu ý:
+
+- Đảm bảo máy chủ hỗ trợ Python và cho phép `shell_exec`.
+- Phân quyền đúng cho file `main.py` (chmod +x nếu cần).
+- Cẩn thận với bảo mật đầu vào — nên kiểm tra kỹ và filter tránh lệnh nguy hiểm.
+
+---
+
+## 🌐 Tích hợp API trung gian bằng `index.php` (PHP)
+
+Bạn có thể sử dụng `index.php` như một API trung gian để gọi đến script Python `main.py` thông qua dòng lệnh hệ thống.
+
+### Cách hoạt động:
+- Nhận tham số từ URL (`bienso`, `loaixe`, `apicaptcha`)
+- Gọi `main.py` bằng dòng lệnh `shell_exec`
+- Trả về kết quả JSON từ Python
+
+### Ví dụ gọi API:
+
+```
+GET http://yourdomain.com/index.php?bienso=30A12345&loaixe=1&apicaptcha=your_api_key
+```
+
+### ⚙️ Cấu hình PHP
+
+Đảm bảo PHP có thể chạy lệnh shell:
+
+1. Mở file cấu hình `php.ini` và kiểm tra các dòng sau:
+
+```ini
+disable_functions =
+```
+
+> Nếu thấy `shell_exec`, `exec`, `system` trong danh sách, **hãy xóa chúng đi** hoặc đảm bảo các hàm này không bị vô hiệu hóa.
+
+2. Khởi động lại web server sau khi chỉnh sửa `php.ini`:
+   - Apache: `sudo service apache2 restart`
+   - Nginx + PHP-FPM: `sudo service php-fpm restart`
+
+### 🔐 Ghi chú bảo mật:
+- **Luôn lọc dữ liệu đầu vào** tránh nguy cơ injection.
+- Không nên mở rộng quyền thực thi quá mức nếu chạy trên môi trường public.
